@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>간단 가계부 — 테스트</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header><h1>테스트 결과</h1></header>
+<main>
+  <div class="card">
+    <p id="head" class="result-head">돌리는 중…</p>
+    <p class="hint">초록 ✓ 는 통과, 빨강 ✗ 는 실패입니다. 실패한 항목 아래에 기대값과 실제값이 나옵니다.</p>
+  </div>
+  <div class="card"><div id="cases"></div></div>
+</main>
+
+<script src="data/sample-expenses.js"></script>
+<script src="src/money.js"></script>
+<script src="src/stats.js"></script>
+<script src="src/storage.js"></script>
+<script src="src/csv.js"></script>
+<script src="src/app.js"></script>
+<script src="tests/runner.js"></script>
+<script src="tests/cases.js"></script>
+<script>
+(function () {
+  var summary = runAll();
+  var head = document.getElementById('head');
+  head.textContent = summary.total + '개 중 ' + summary.passed + '개 통과 / ' + summary.failed + '개 실패';
+  head.className = 'result-head ' + (summary.failed === 0 ? 'pass' : 'fail');
+  document.title = (summary.failed === 0 ? '전부 통과' : summary.failed + '개 실패') + ' — 간단 가계부 테스트';
+
+  var box = document.getElementById('cases');
+  for (var i = 0; i < summary.results.length; i++) {
+    var r = summary.results[i];
+    var div = document.createElement('div');
+    div.className = 'case ' + (r.ok ? 'ok' : 'no');
+    var mark = document.createElement('span');
+    mark.className = 'mark';
+    mark.textContent = r.ok ? '✓' : '✗';
+    var name = document.createElement('span');
+    name.textContent = r.name;
+    div.appendChild(mark);
+    div.appendChild(name);
+    if (!r.ok) {
+      var pre = document.createElement('pre');
+      pre.textContent = r.message;
+      div.appendChild(pre);
+    }
+    box.appendChild(div);
+  }
+})();
+</script>
+</body>
+</html>

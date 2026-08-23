@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>간단 가계부</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header>
+  <h1>간단 가계부</h1>
+  <nav class="tabs">
+    <button id="tab-record" class="on">기록</button>
+    <button id="tab-stats">통계</button>
+  </nav>
+</header>
+
+<p id="storage-notice" class="notice" hidden>
+  이 브라우저에서는 저장이 막혀 있어 <strong>이번 화면에서만</strong> 기록이 유지됩니다. 실습에는 지장이 없습니다.
+</p>
+
+<main>
+  <section id="view-record">
+    <form id="add-form" class="card">
+      <h2>지출 추가</h2>
+      <div class="fields">
+        <label>날짜 <input type="date" id="in-date" required></label>
+        <label>분류
+          <select id="in-category">
+            <option>식비</option><option>교통</option><option>주거</option>
+            <option>의료</option><option>문화</option><option>기타</option>
+          </select>
+        </label>
+        <label>금액 <input type="number" id="in-amount" step="1" placeholder="8500" required></label>
+        <label class="wide">메모 <input type="text" id="in-memo" placeholder="김밥천국 점심"></label>
+      </div>
+      <button type="submit" class="primary">추가</button>
+    </form>
+
+    <div class="card">
+      <div class="toolbar">
+        <input type="search" id="search" placeholder="메모·분류로 검색">
+        <label>정렬
+          <select id="sort-key">
+            <option value="date">날짜</option>
+            <option value="amount">금액</option>
+          </select>
+        </label>
+        <button id="sort-dir">내림차순</button>
+        <span id="row-count" class="count">0건</span>
+      </div>
+      <table>
+        <thead><tr><th>날짜</th><th>분류</th><th class="num">금액</th><th>메모</th><th></th></tr></thead>
+        <tbody id="expense-rows"></tbody>
+      </table>
+      <p id="empty-hint" class="hint" hidden>기록이 없습니다. 아래 <strong>샘플 데이터 넣기</strong>를 눌러 보세요.</p>
+      <div class="toolbar">
+        <button id="btn-sample">샘플 데이터 넣기</button>
+        <button id="btn-export">CSV 내보내기</button>
+        <button id="btn-import">CSV 가져오기</button>
+        <input type="file" id="file-import" accept=".csv,text/csv" hidden>
+      </div>
+    </div>
+  </section>
+
+  <section id="view-stats" hidden>
+    <div class="card">
+      <h2>전체 합계</h2>
+      <p id="stat-total" class="big">0원</p>
+      <label>이번 달 예산 <input type="number" id="budget" step="10000"></label>
+      <p id="budget-warning" class="warn" hidden></p>
+    </div>
+
+    <div class="card">
+      <h2>분류별 합계</h2>
+      <table>
+        <thead><tr><th>분류</th><th class="num">합계</th></tr></thead>
+        <tbody id="category-rows"></tbody>
+      </table>
+    </div>
+
+    <div class="card">
+      <h2>월별 합계</h2>
+      <table>
+        <thead><tr><th>달</th><th class="num">합계</th></tr></thead>
+        <tbody id="month-rows"></tbody>
+      </table>
+      <div class="toolbar">
+        <select id="month-picker"><option value="">달을 고르세요</option></select>
+        <span id="month-result" class="count"></span>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <p>Claude Code 교육 시리즈 실습용 저장소입니다. 실습을 위해 <strong>일부러 심어 둔 결함</strong>이 있습니다 — 실제 가계부로 쓰지 마세요.</p>
+</footer>
+
+<script src="data/sample-expenses.js"></script>
+<script src="src/money.js"></script>
+<script src="src/stats.js"></script>
+<script src="src/storage.js"></script>
+<script src="src/csv.js"></script>
+<script src="src/app.js"></script>
+</body>
+</html>
