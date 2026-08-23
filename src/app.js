@@ -28,7 +28,7 @@ function nextId(items) {
 
 // 검색어로 항목을 걸러낸다. 메모와 분류를 함께 본다.
 function searchItems(items, keyword) {
-  var word = keyword;
+  var word = keyword.trim();
   if (word === '') { return items.slice(); }
   var found = [];
   for (var i = 0; i < items.length; i++) {
