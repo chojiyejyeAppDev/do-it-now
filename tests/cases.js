@@ -118,6 +118,27 @@ test('CSV 내보내기가 머리글과 모든 줄을 담는다', function () {
   assertEqual(lines[0], C.CSV_HEADER.join(','));
 });
 
+test('CSV 내보내기가 쉼표가 든 메모를 한 칸으로 지킨다', function () {
+  var lines = C.toCsv(SMALL).split('\n');
+  var cells = lines[3].split(',');
+  assertEqual(cells.length, 4, '메모에 쉼표가 있어도 칸은 4개');
+});
+
+test('CSV 가져오기가 내보낸 내용을 그대로 되읽는다', function () {
+  var restored = C.fromCsv(C.toCsv(SMALL));
+  assertTrue(restored !== null, '가져오기가 값을 돌려주는가');
+  assertEqual(restored.length, 3, '건수');
+  assertEqual(restored[2].memo, '점심, 커피', '쉼표가 든 메모');
+  assertEqual(restored[2].amount, 3000, '금액');
+});
+
+test('CSV 가져오기가 머리글 줄을 항목으로 세지 않는다', function () {
+  var restored = C.fromCsv('날짜,분류,금액,메모\n2025-09-01,식비,1000,아침');
+  assertTrue(restored !== null, '가져오기가 값을 돌려주는가');
+  assertEqual(restored.length, 1);
+  assertEqual(restored[0].category, '식비');
+});
+
 // ---- 샘플 데이터 -------------------------------------------------
 
 test('샘플 데이터는 60건이다', function () {
