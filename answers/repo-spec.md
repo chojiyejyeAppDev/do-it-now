@@ -22,10 +22,10 @@
 | 브랜치 | 남아 있는 결함 | 테스트 | 특이사항 |
 |---|---|---|---|
 | `main` | BUG-01, BUG-02, BUG-03, BUG-04, BUG-05, GAP-01 | **17개 중 14개 통과 / 3개 실패** | 3회 시작점. 1회 재실습도 여기 |
-| `start/ep05` | BUG-04, BUG-05, GAP-01 | **19개 중 18개 통과 / 1개 실패** | CLAUDE.md 없음(의도) |
-| `start/ep07` | BUG-05, GAP-01 | **19개 중 19개 통과 / 0개 실패** | CLAUDE.md 있음, `.claude/` 비어 있음 |
-| `start/ep09` | BUG-05, GAP-01 | **19개 중 19개 통과 / 0개 실패** | `mcp/` 추가, `.mcp.json` 없음 |
-| `start/ep11` | BUG-05, GAP-01 | **21개 중 19개 통과 / 2개 실패** | CSV 테스트 2건 추가, `.claude/agents/` 비어 있음 |
+| `start/ledger-ep05` | BUG-04, BUG-05, GAP-01 | **19개 중 18개 통과 / 1개 실패** | CLAUDE.md 없음(의도) |
+| `start/ledger-ep07` | BUG-05, GAP-01 | **19개 중 19개 통과 / 0개 실패** | CLAUDE.md 있음, `.claude/` 비어 있음 |
+| `start/ledger-ep09` | BUG-05, GAP-01 | **19개 중 19개 통과 / 0개 실패** | `mcp/` 추가, `.mcp.json` 없음 |
+| `start/ledger-ep11` | BUG-05, GAP-01 | **21개 중 19개 통과 / 2개 실패** | CSV 테스트 2건 추가, `.claude/agents/` 비어 있음 |
 
 **빨강 3개가 나오는 이유(main)**: 결함 하나에 실패 테스트 하나씩 대응한다.
 BUG-01 → "분류별 합계가 모든 항목을 포함한다" / BUG-02 → "음수 금액도 올바르게 반올림한다" /
@@ -40,14 +40,30 @@ BUG-03 → "한 자리 달도 그 달의 항목을 찾아낸다". 하나를 고�
 > - ③ 주 결함을 고치면 `2개 실패`로 줄고, 셋을 다 고치면 `17개 전부 통과`가 된다
 > - ④ 되돌리기 후 다시 열면 다시 `3개 실패`로 돌아온다
 
+## 폴더 구조 (2026-08-23 플랫폼 이전 후)
+
+대표 지시로 저장소를 **여러 실습을 담는 플랫폼**으로 이전했다 (원장 #15, 확인 #11 (a) 채택).
+
+```
+/                         ← 입구: README(실습 목록)·CONTRIBUTING·LICENSE·.github
+practices/
+  01-household-ledger/    ← 실습 01 전체 (index.html·src·tests·docs·CLAUDE.md·.claude·mcp)
+```
+
+- 브랜치 이름 규칙: **`start/<실습 이름>-ep<회차>`** (예: `start/ledger-ep05`). 옛 이름 `start/ep05`는 제거했다.
+- `start/ledger-ep03`은 `main`과 같은 상태다 — 이름 규칙을 맞추기 위한 별칭 브랜치이며 **두 브랜치를 함께 갱신해야 한다.**
+- 이전 이전 상태는 태그 `v1-ep03`에 보존돼 있다.
+- 유지보수 명령의 실행 위치가 바뀌었다: `node tests/run.js` 는 **`practices/01-household-ledger/` 안에서** 돌린다.
+
 ## 유지보수 규칙
 
 1. **`main`의 결함 3건을 실수로 고치지 마라.** 개선 커밋을 넣기 전에 `node tests/run.js`를 돌려
    실패가 정확히 3개인지 확인한다.
 2. 회차를 발행할 때 그 시점의 상태를 태그로 고정한다: `git tag v1-ep03 main`.
+   실습이 늘면 태그에도 실습 이름을 단다 (`v1-ledger-ep05` 식).
 3. 샘플 데이터를 바꾸면 위 숫자 계약이 전부 바뀐다. 바꿔야 한다면 `node tests/run.js`로
    새 값을 뽑아 이 문서와 각 회차 원고를 **같은 숫자로** 갱신한다.
-4. 코드는 `data/sample-expenses.js` **한 파일**을 브라우저와 Node가 공유한다.
+4. 코드는 `practices/01-household-ledger/data/sample-expenses.js` **한 파일**을 브라우저와 Node가 공유한다.
    설계서는 `.json`을 적었으나, 브라우저에서 파일을 직접 열면(`file://`) JSON을 읽어 올 수 없어
    `.js`로 바꿨다. 두 벌 관리를 피하기 위해 `.json`은 두지 않는다.
 
@@ -65,6 +81,6 @@ BUG-03 → "한 자리 달도 그 달의 항목을 찾아낸다". 하나를 고�
    `answers` 브랜치가 공개인 것은 사고가 아니라 설계다 — 정답을 실습 폴더 밖에 둔 이유는
    사람에게 숨기려는 것이 아니라 Claude Code가 읽고 답을 써 버리는 것을 막기 위해서다.
 7. **정책 문서는 모든 시작 브랜치에 같이 둔다.** `CONTRIBUTING.md` ·
-   `.github/PULL_REQUEST_TEMPLATE.md` · README 경고는 `main`과 `start/*` 4개에 동일하게 반영했다
+   `.github/PULL_REQUEST_TEMPLATE.md` · README 경고는 `main`과 `start/ledger-*` 4개에 동일하게 반영했다
    (2026-08-23). 한쪽만 고치면 학습자가 브랜치에 따라 반대 안내를 읽는다.
    문서만 바꾼 커밋이므로 각 브랜치의 테스트 개수는 변하지 않았다 — 반영 후 5개 브랜치 전부 실행해 확인했다.
