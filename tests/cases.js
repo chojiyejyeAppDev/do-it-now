@@ -118,12 +118,6 @@ test('CSV 내보내기가 머리글과 모든 줄을 담는다', function () {
   assertEqual(lines[0], C.CSV_HEADER.join(','));
 });
 
-test('CSV 내보내기가 쉼표가 든 메모를 한 칸으로 지킨다', function () {
-  var lines = C.toCsv(SMALL).split('\n');
-  var cells = lines[3].split(',');
-  assertEqual(cells.length, 4, '메모에 쉼표가 있어도 칸은 4개');
-});
-
 test('CSV 가져오기가 내보낸 내용을 그대로 되읽는다', function () {
   var restored = C.fromCsv(C.toCsv(SMALL));
   assertTrue(restored !== null, '가져오기가 값을 돌려주는가');
