@@ -82,6 +82,11 @@ test('예산을 넘은 금액만 알려 준다', function () {
 
 // ---- 검색·정렬 --------------------------------------------------
 
+test('검색어 앞뒤 공백을 무시하고 찾는다', function () {
+  assertEqual(A.searchItems(SMALL, ' 커피').length, 1, '앞에 공백');
+  assertEqual(A.searchItems(SMALL, '커피 ').length, 1, '뒤에 공백');
+});
+
 test('메모와 분류 양쪽에서 검색한다', function () {
   assertEqual(A.searchItems(SMALL, '커피').length, 1, '메모');
   assertEqual(A.searchItems(SMALL, '식비').length, 2, '분류');
@@ -121,6 +126,10 @@ test('샘플 데이터는 60건이다', function () {
 
 test('샘플 데이터의 식비 합계는 200,600원이다', function () {
   assertEqual(S.totalByCategory(SAMPLE)['식비'], 200600);
+});
+
+test('샘플 데이터의 전체 합계는 3,290,334원이다', function () {
+  assertEqual(S.totalOfAll(SAMPLE), 3290334);
 });
 
 if (typeof module !== 'undefined' && module.exports) { module.exports = {}; }

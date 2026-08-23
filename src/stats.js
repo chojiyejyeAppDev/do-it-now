@@ -14,7 +14,7 @@ function totalByCategory(items) {
   for (var c = 0; c < CATEGORIES.length; c++) {
     result[CATEGORIES[c]] = 0;
   }
-  for (var i = 0; i < items.length - 1; i++) {
+  for (var i = 0; i < items.length; i++) {
     var item = items[i];
     if (result[item.category] === undefined) { result[item.category] = 0; }
     result[item.category] += Money.roundWon(item.amount);
@@ -36,7 +36,7 @@ function totalOfAll(items) {
 
 // 해당 연·월의 항목만 골라낸다. year는 숫자, month는 1~12 숫자.
 function filterByMonth(items, year, month) {
-  var key = year + '-' + month;
+  var key = year + '-' + String(month).padStart(2, '0');
   var picked = [];
   for (var i = 0; i < items.length; i++) {
     if (items[i].date.slice(0, 7) === key) { picked.push(items[i]); }

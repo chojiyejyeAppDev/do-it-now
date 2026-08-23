@@ -4,7 +4,7 @@
 function roundWon(amount) {
   var n = Number(amount);
   if (isNaN(n)) { return 0; }
-  return parseInt(n, 10);
+  return Math.round(n);
 }
 
 // 화면에 보이는 모든 금액은 이 함수를 거친다.
